@@ -367,10 +367,41 @@ class _PageMenu extends State<PageMenu> {
     }
   }
 
+  void del(String id) {
+    var url = "http://10.0.2.2/warung_makan/del.php";
+
+    http.post(Uri.parse(url), body: {
+      "id": id,
+    });
+  }
+
+  Future<void> deleteMenu(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Item telah dihapus!"),
+          content: const Text(''),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Ok'),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => PageMenu()),
+                );
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Widget mainFunction() {
     return Scaffold(
       appBar: new AppBar(
-        title: new Text("Warung Makan"),
+        title: new Text("Menu"),
       ),
       body: new ListView.builder(
         itemCount: menu.length,
@@ -388,7 +419,7 @@ class _PageMenu extends State<PageMenu> {
                   new Padding(
                     padding: EdgeInsets.only(left: 2),
                     child: new Container(
-                      width: 125,
+                      width: 100,
                       child: new Column(
                         children: <Widget>[
                           Align(
@@ -406,6 +437,49 @@ class _PageMenu extends State<PageMenu> {
                               alignment: Alignment.centerLeft,
                               child: new Text(menu[i]["harga"],
                                   textAlign: TextAlign.left)),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 5, right: 5),
+                        child: new Text("Stock: " + menu[i]["stock"],
+                            textAlign: TextAlign.left),
+                      )),
+                  new Padding(
+                    padding: EdgeInsets.only(left: 2),
+                    child: new Container(
+                      width: 80,
+                      child: new Column(
+                        children: <Widget>[
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Container(
+                                child: new RaisedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          EditItem(id: menu[i]["id"])),
+                                );
+                              },
+                              child: new Text("Edit"),
+                            )),
+                          ),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Container(
+                                child: new RaisedButton(
+                              onPressed: () {
+                                del(menu[i]["id"]);
+                                deleteMenu(context);
+                              },
+                              child: new Text("Hapus"),
+                            )),
+                          ),
                         ],
                       ),
                     ),
@@ -454,6 +528,7 @@ class AddItem extends StatelessWidget {
   TextEditingController nama = new TextEditingController();
   TextEditingController detil = new TextEditingController();
   TextEditingController harga = new TextEditingController();
+  TextEditingController stok = new TextEditingController();
   final alamat = 'img/placeholder.png';
   void addData() {
     var url = "http://10.0.2.2/warung_makan/post3.php";
@@ -463,28 +538,9 @@ class AddItem extends StatelessWidget {
       "nama": nama.text,
       "detil": detil.text,
       "harga": harga.text,
-      "url": this.alamat
+      "url": this.alamat,
+      "stok": stok.text,
     });
-  }
-
-  Future<void> invalid(BuildContext context) {
-    return showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Invalid'),
-          content: const Text('Pastikan semua form terisi dengan benar!'),
-          actions: <Widget>[
-            FlatButton(
-              child: Text('Ok'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
   }
 
   Future<void> valid(BuildContext context) {
@@ -565,12 +621,97 @@ class AddItem extends StatelessWidget {
             controller: harga,
           ),
         ),
+        Container(
+          width: 250,
+          margin: EdgeInsets.only(left: 50),
+          child: Text("Stok Item"),
+        ),
+        Container(
+          width: 250,
+          margin: EdgeInsets.only(left: 50),
+          child: TextField(
+            controller: stok,
+          ),
+        ),
         RaisedButton(
           onPressed: () {
             addData();
             valid(context);
           },
           child: Text("Tambah"),
+        )
+      ]),
+    );
+  }
+}
+
+//======================================================================================
+class EditItem extends StatelessWidget {
+  TextEditingController stok = new TextEditingController();
+  final id;
+  EditItem({Key key, @required this.id}) : super(key: key);
+
+  void addData() {
+    var url = "http://10.0.2.2/warung_makan/edit.php";
+
+    http.post(Uri.parse(url), body: {
+      "id": this.id,
+      "stok": stok.text,
+    });
+    print(this.id);
+  }
+
+  Future<void> valid(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Berhasil"),
+          content: const Text('Stok telah diperbarui'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Ok'),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => PageMenu()),
+                );
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Edit Stok"),
+      ),
+      body: Column(children: [
+        Padding(
+          padding: EdgeInsets.only(top: 10),
+          child: Container(
+            width: 250,
+            margin: EdgeInsets.only(left: 50),
+            child: Text("Stok Item untuk " + this.id),
+          ),
+        ),
+        Container(
+          width: 250,
+          margin: EdgeInsets.only(left: 50),
+          child: TextField(
+            controller: stok,
+          ),
+        ),
+        RaisedButton(
+          onPressed: () {
+            addData();
+            valid(context);
+          },
+          child: Text("Perbarui"),
         )
       ]),
     );

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1016797405032",
+    "project_id": "warungonline-51616",
+    "storage_bucket": "warungonline-51616.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1016797405032:android:0d9680da33629794e680dd",
+        "android_client_info": {
+          "package_name": "com.example.warung_admin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1016797405032-vnrgq7jdu30vmkm2a0l7onvrva5hk3mt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUW92i8zKx2eJ6eTVKVvK9oXy6CpKcNjQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1016797405032-vnrgq7jdu30vmkm2a0l7onvrva5hk3mt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
