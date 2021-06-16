@@ -150,7 +150,7 @@ class _MyAppState extends State<MyApp> {
   Future<Map<String, dynamic>> getUserDetails(String accessToken) async {
     final url = 'https://$AUTH0_DOMAIN/userinfo';
     final response = await http.get(
-      url,
+      Uri.parse(url),
       headers: {'Authorization': 'Bearer $accessToken'},
     );
 
