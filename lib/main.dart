@@ -658,6 +658,7 @@ class EditItem extends StatelessWidget {
       "id": this.id,
       "stok": stok.text,
     });
+    print(this.id);
   }
 
   Future<void> valid(BuildContext context) {
